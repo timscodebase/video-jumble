@@ -2,6 +2,14 @@
 
 Video Jumble is a web-based interactive experiment that takes a live feed from your device's camera, splits it into a 4x4 grid of "chunks," and allows you to shuffle or reset their order. It leverages modern web APIs like `getUserMedia` for camera access and the View Transition API for smooth, animated reordering.
 
+![No Color](https://res.cloudinary.com/tithos/image/upload/q_auto:good/v1766477168/IMG_9489_yjes2f.avif)
+
+![Random Colors](https://res.cloudinary.com/tithos/image/upload/q_auto:good/v1766477168/IMG_9490_brukkg.avif)
+
+![Primary Colors](https://res.cloudinary.com/tithos/image/upload/q_auto:good/v1766477168/IMG_9488_kjb635.avif)
+
+![Rainbow Gradient](https://res.cloudinary.com/tithos/image/upload/q_auto:good/v1766477168/IMG_9487_mnqtmb.avif)
+
 ## Features
 
 - **Live Camera Integration**: Automatically requests access to the user's front-facing camera.
