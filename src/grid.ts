@@ -1,5 +1,6 @@
-//
 import { CHUNK_COUNT, GRID_COLUMNS, VIEW_TRANSITION_PREFIX } from "./constants";
+
+export type ColorEffect = "none" | "rainbow" | "random" | "primary";
 
 export function createVideoGrid(
   container: HTMLElement,
@@ -28,17 +29,52 @@ export function createVideoGrid(
     videoEl.muted = true;
     videoEl.playsInline = true;
 
-    // Formatting chunk position
     videoEl.style.width = "400%";
     videoEl.style.height = "400%";
     videoEl.style.position = "absolute";
     videoEl.style.top = `${-Math.floor(i / GRID_COLUMNS) * 100}%`;
     videoEl.style.left = `${-(i % GRID_COLUMNS) * 100}%`;
 
+    // Create and add the overlay
+    const overlay = document.createElement("div");
+    overlay.className = "color-overlay";
+
     chunk.appendChild(videoEl);
+    chunk.appendChild(overlay); // Crucial for colorizing
     container.appendChild(chunk);
     videoEl.play().catch(console.error);
   }
+}
+
+export function applyColorEffect(container: HTMLElement, effect: ColorEffect) {
+  const chunks = Array.from(container.children);
+
+  chunks.forEach((chunk, i) => {
+    const overlay = chunk.querySelector(".color-overlay") as HTMLElement;
+    if (!overlay) return;
+
+    const row = Math.floor(i / GRID_COLUMNS);
+    const col = i % GRID_COLUMNS;
+
+    switch (effect) {
+      case "rainbow":
+        const hue = ((row + col) / (GRID_COLUMNS + 2)) * 360;
+        overlay.style.backgroundColor = `hsl(${hue}, 70%, 50%)`;
+        break;
+      case "random":
+        overlay.style.backgroundColor = `rgb(${Math.random() * 255}, ${
+          Math.random() * 255
+        }, ${Math.random() * 255})`;
+        break;
+      case "primary":
+        const primaries = ["#ff0000", "#00ff00", "#0000ff"];
+        overlay.style.backgroundColor = primaries[i % primaries.length];
+        break;
+      case "none":
+      default:
+        overlay.style.backgroundColor = "transparent";
+    }
+  });
 }
 
 export function shuffleGrid(container: HTMLElement) {

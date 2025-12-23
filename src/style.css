@@ -1,9 +1,7 @@
 :root {
   color-scheme: light dark;
-
   --color-background: #121212;
   --color-foreground: #ffffff;
-
   --border-1: 1px solid var(--color-foreground);
 }
 
@@ -11,13 +9,6 @@
   :root {
     --color-background: #ffffff;
     --color-foreground: #000000;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #121212;
-    --color-foreground: #ffffff;
   }
 }
 
@@ -32,7 +23,6 @@
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
-  position: relative;
   min-height: 100dvh;
 }
 
@@ -48,13 +38,14 @@ main {
   grid-template-columns: repeat(4, 1fr);
 }
 
+/* Color Overlay Logic */
 .color-overlay {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  mix-blend-mode: color; /* Tints the video while preserving luminosity */
-  transition: background-color 0.4s ease; /* Smooth transition between effects */
-  opacity: 0.6; /* Adjust for intensity */
+  pointer-events: none; /* Allows clicks to pass through to buttons/grid */
+  mix-blend-mode: color;
+  transition: background-color 0.4s ease;
+  opacity: 0.6;
 }
 
 .controls {
@@ -69,7 +60,7 @@ button {
   border: var(--border-1);
   padding: 0.5rem 0.75rem;
   font-size: clamp(1.2rem, 2vw, 1.7rem);
-  color: var(---color-foreground);
+  color: var(--color-foreground); /* Fixed typo from --- */
   background: none;
   cursor: pointer;
 }

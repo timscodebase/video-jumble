@@ -1,7 +1,12 @@
-//
 import "./style.css";
 import { getCameraStream, stopMediaStream } from "./camera";
-import { createVideoGrid, shuffleGrid, resetGrid } from "./grid";
+import {
+  createVideoGrid,
+  shuffleGrid,
+  resetGrid,
+  applyColorEffect,
+  type ColorEffect,
+} from "./grid";
 
 const videoContainer = document.querySelector(
   ".video-container"
@@ -22,7 +27,7 @@ async function initApp() {
   }
 }
 
-// Event Listeners
+// Existing Listeners
 shuffleBtn.addEventListener("click", () => {
   if ("startViewTransition" in document) {
     (document as any).startViewTransition(() => shuffleGrid(videoContainer));
@@ -37,6 +42,22 @@ resetBtn.addEventListener("click", () => {
   } else {
     resetGrid(videoContainer);
   }
+});
+
+// New Effect Listeners
+document.querySelectorAll(".effect-btn").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    const effect = (e.target as HTMLButtonElement).dataset
+      .effect as ColorEffect;
+
+    if ("startViewTransition" in document) {
+      (document as any).startViewTransition(() =>
+        applyColorEffect(videoContainer, effect)
+      );
+    } else {
+      applyColorEffect(videoContainer, effect);
+    }
+  });
 });
 
 window.addEventListener("resize", () => {
