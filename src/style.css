@@ -47,3 +47,11 @@ main {
   gap: clamp(0.5rem, 2vw, 1rem);
   grid-template-columns: repeat(4, 1fr);
 }
+
+button {
+  border: var(--border-1);
+  padding: 0.5rem 0.75rem;
+  font-size: clamp(1.2rem, 2vw, 1.7rem);
+  background: none;
+  cursor: pointer;
+}
