@@ -1,10 +1,12 @@
 import "./style.css";
 import { getCameraStream, stopMediaStream } from "./camera";
+import { requestMotionPermission, onShake, onTilt } from "./motion";
 import {
   createVideoGrid,
   shuffleGrid,
   resetGrid,
   applyColorEffect,
+  applyTiltTransform,
   type ColorEffect,
 } from "./grid";
 
@@ -13,6 +15,7 @@ const videoContainer = document.querySelector(
 ) as HTMLDivElement;
 const shuffleBtn = document.querySelector(".shuffle") as HTMLButtonElement;
 const resetBtn = document.querySelector(".reset") as HTMLButtonElement;
+const motionBtn = document.querySelector("#enable-motion") as HTMLButtonElement;
 
 let currentStream: MediaStream | null = null;
 let isLandscape = window.innerWidth > window.innerHeight;
@@ -27,7 +30,7 @@ async function initApp() {
   }
 }
 
-// Existing Listeners
+// Button Listeners
 shuffleBtn.addEventListener("click", () => {
   if ("startViewTransition" in document) {
     (document as any).startViewTransition(() => shuffleGrid(videoContainer));
@@ -44,7 +47,7 @@ resetBtn.addEventListener("click", () => {
   }
 });
 
-// New Effect Listeners
+// Color Effect Listeners
 document.querySelectorAll(".effect-btn").forEach((btn) => {
   btn.addEventListener("click", (e) => {
     const effect = (e.target as HTMLButtonElement).dataset
@@ -58,6 +61,30 @@ document.querySelectorAll(".effect-btn").forEach((btn) => {
       applyColorEffect(videoContainer, effect);
     }
   });
+});
+
+// Motion & Orientation Listeners
+motionBtn.addEventListener("click", async () => {
+  const granted = await requestMotionPermission();
+  if (granted) {
+    motionBtn.style.display = "none";
+
+    // Shake to Shuffle
+    onShake(() => {
+      if ("startViewTransition" in document) {
+        (document as any).startViewTransition(() =>
+          shuffleGrid(videoContainer)
+        );
+      } else {
+        shuffleGrid(videoContainer);
+      }
+    });
+
+    // Tilt to Slide
+    onTilt((beta, gamma) => {
+      applyTiltTransform(videoContainer, beta, gamma);
+    });
+  }
 });
 
 window.addEventListener("resize", () => {
