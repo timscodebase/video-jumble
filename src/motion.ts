@@ -32,6 +32,10 @@ export function onShake(callback: () => void) {
   let lastX: number | null = null;
   let lastY: number | null = null;
   let lastZ: number | null = null;
+
+  // Debounce logic
+  let lastShakeTime = 0;
+  const shakeCooldown = 1000; // 1 second wait between shuffles
   const threshold = 15;
 
   window.addEventListener("devicemotion", (event) => {
@@ -48,7 +52,12 @@ export function onShake(callback: () => void) {
         (deltaX > threshold && deltaZ > threshold) ||
         (deltaY > threshold && deltaZ > threshold)
       ) {
-        callback();
+        // Check cooldown
+        const now = Date.now();
+        if (now - lastShakeTime > shakeCooldown) {
+          lastShakeTime = now;
+          callback();
+        }
       }
     }
 
@@ -59,14 +68,20 @@ export function onShake(callback: () => void) {
 }
 
 export function onTilt(callback: (beta: number, gamma: number) => void) {
+  // Use requestAnimationFrame to smooth out the tilt updates (optional but recommended)
+  let ticking = false;
+
   window.addEventListener(
     "deviceorientation",
     (event) => {
-      // Check if values are available (they can be null on some devices)
-      if (event.beta !== null && event.gamma !== null) {
-        callback(event.beta, event.gamma);
+      if (!ticking && event.beta !== null && event.gamma !== null) {
+        window.requestAnimationFrame(() => {
+          callback(event.beta!, event.gamma!); // Non-null assertion since we checked
+          ticking = false;
+        });
+        ticking = true;
       }
     },
     true
-  ); // Use capture phase to ensure we catch it
+  );
 }
