@@ -1,17 +1,30 @@
 // src/motion.ts
 
 export async function requestMotionPermission(): Promise<boolean> {
-  // Check if the browser requires permission (mostly iOS)
-  if (typeof (DeviceMotionEvent as any).requestPermission === "function") {
+  // 1. Try Requesting DeviceOrientation (Tilt)
+  if (typeof (DeviceOrientationEvent as any).requestPermission === "function") {
     try {
-      const response = await (DeviceMotionEvent as any).requestPermission();
-      return response === "granted";
+      const permission = await (
+        DeviceOrientationEvent as any
+      ).requestPermission();
+      if (permission !== "granted") return false;
     } catch (e) {
-      console.error("Permission request failed", e);
+      console.error("Orientation permission failed", e);
       return false;
     }
   }
-  // Android/Desktop usually doesn't require explicit permission
+
+  // 2. Try Requesting DeviceMotion (Shake)
+  if (typeof (DeviceMotionEvent as any).requestPermission === "function") {
+    try {
+      const permission = await (DeviceMotionEvent as any).requestPermission();
+      if (permission !== "granted") return false;
+    } catch (e) {
+      console.error("Motion permission failed", e);
+      return false;
+    }
+  }
+
   return true;
 }
 
@@ -19,7 +32,7 @@ export function onShake(callback: () => void) {
   let lastX: number | null = null;
   let lastY: number | null = null;
   let lastZ: number | null = null;
-  const threshold = 15; // Sensitivity: higher is harder to shake
+  const threshold = 15;
 
   window.addEventListener("devicemotion", (event) => {
     const acc = event.accelerationIncludingGravity;
@@ -46,9 +59,14 @@ export function onShake(callback: () => void) {
 }
 
 export function onTilt(callback: (beta: number, gamma: number) => void) {
-  window.addEventListener("deviceorientation", (event) => {
-    if (event.beta !== null && event.gamma !== null) {
-      callback(event.beta, event.gamma);
-    }
-  });
+  window.addEventListener(
+    "deviceorientation",
+    (event) => {
+      // Check if values are available (they can be null on some devices)
+      if (event.beta !== null && event.gamma !== null) {
+        callback(event.beta, event.gamma);
+      }
+    },
+    true
+  ); // Use capture phase to ensure we catch it
 }

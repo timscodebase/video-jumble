@@ -86,15 +86,18 @@ export function applyTiltTransform(
   gamma: number
 ) {
   const chunks = Array.from(container.children) as HTMLElement[];
-  const maxMove = 20; // Maximum parallax shift in pixels
 
-  // Calculate relative movement based on tilt degrees
+  // INCREASED SENSITIVITY
+  const maxMove = 40;
+
+  // Constrain rotation to +/- 30 degrees for the effect calculation
   const yMove = (Math.max(-30, Math.min(30, beta)) / 30) * maxMove;
   const xMove = (Math.max(-30, Math.min(30, gamma)) / 30) * maxMove;
 
   chunks.forEach((chunk) => {
     const video = chunk.querySelector("video");
     if (video) {
+      // Move opposite to tilt for parallax feel
       video.style.transform = `translate(${xMove}px, ${yMove}px)`;
     }
   });
