@@ -34,15 +34,14 @@ main {
 .video-container {
   margin: 1rem auto 0 auto;
   display: grid;
-  gap: clamp(0.5rem, 2vw, 1rem);
+  gap: clamp(0.25rem, 2vw, 1rem);
   grid-template-columns: repeat(4, 1fr);
 }
 
-/* Color Overlay Logic */
 .color-overlay {
   position: absolute;
   inset: 0;
-  pointer-events: none; /* Allows clicks to pass through to buttons/grid */
+  pointer-events: none;
   mix-blend-mode: color;
   transition: background-color 0.4s ease;
   opacity: 0.6;
@@ -60,7 +59,7 @@ button {
   border: var(--border-1);
   padding: 0.5rem 0.75rem;
   font-size: clamp(1.2rem, 2vw, 1.7rem);
-  color: var(--color-foreground); /* Fixed typo from --- */
+  color: var(--color-foreground);
   background: none;
   cursor: pointer;
 }
