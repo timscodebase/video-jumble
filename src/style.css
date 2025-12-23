@@ -1,0 +1,43 @@
+:root {
+	color-scheme: light dark;
+
+	--color-background: #121212;
+	--color-foreground: #ffffff;
+
+	--border-1: 1px solid var(--color-foreground);
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--color-background: #ffffff;
+		--color-foreground: #000000;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-background: #121212;
+		--color-foreground: #ffffff;
+	}
+}
+
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: var(--color-background);
+	color: var(--color-foreground);
+	position: relative;
+	min-height: 100dvh;
+}
+
+.video-container {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: repeat(4, 1fr);
+}
