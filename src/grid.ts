@@ -29,18 +29,21 @@ export function createVideoGrid(
     videoEl.muted = true;
     videoEl.playsInline = true;
 
+    // Formatting chunk position (4x4 grid)
     videoEl.style.width = "400%";
     videoEl.style.height = "400%";
     videoEl.style.position = "absolute";
     videoEl.style.top = `${-Math.floor(i / GRID_COLUMNS) * 100}%`;
     videoEl.style.left = `${-(i % GRID_COLUMNS) * 100}%`;
+    videoEl.style.transition = "transform 0.1s ease-out"; // Smooth tilt motion
+    videoEl.style.willChange = "transform";
 
-    // Create and add the overlay
+    // Create and add the color overlay
     const overlay = document.createElement("div");
     overlay.className = "color-overlay";
 
     chunk.appendChild(videoEl);
-    chunk.appendChild(overlay); // Crucial for colorizing
+    chunk.appendChild(overlay);
     container.appendChild(chunk);
     videoEl.play().catch(console.error);
   }
@@ -73,6 +76,29 @@ export function applyColorEffect(container: HTMLElement, effect: ColorEffect) {
       case "none":
       default:
         overlay.style.backgroundColor = "transparent";
+    }
+  });
+}
+
+export function applyTiltTransform(
+  container: HTMLElement,
+  beta: number,
+  gamma: number
+) {
+  const chunks = Array.from(container.children) as HTMLElement[];
+
+  // INCREASED SENSITIVITY
+  const maxMove = 40;
+
+  // Constrain rotation to +/- 30 degrees for the effect calculation
+  const yMove = (Math.max(-30, Math.min(30, beta)) / 30) * maxMove;
+  const xMove = (Math.max(-30, Math.min(30, gamma)) / 30) * maxMove;
+
+  chunks.forEach((chunk) => {
+    const video = chunk.querySelector("video");
+    if (video) {
+      // Move opposite to tilt for parallax feel
+      video.style.transform = `translate(${xMove}px, ${yMove}px)`;
     }
   });
 }
