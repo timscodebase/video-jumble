@@ -44,6 +44,6 @@ main {
 .video-container {
   margin: 1rem auto 0 auto;
   display: grid;
-  gap: 1rem;
+  gap: clamp(0.5rem, 2vw, 1rem);
   grid-template-columns: repeat(4, 1fr);
 }
