@@ -16,12 +16,18 @@ export function createVideoGrid(
 
   for (let i = 0; i < CHUNK_COUNT; i++) {
     const chunk = document.createElement("div");
+    chunk.className = "video-chunk"; // Required for hit-testing
     chunk.style.overflow = "hidden";
     chunk.style.position = "relative";
     chunk.style.setProperty(
       "view-transition-name",
       `${VIEW_TRANSITION_PREFIX}${i}`
     );
+
+    // Styling for the eye-tracking highlight effect
+    chunk.style.boxSizing = "border-box";
+    chunk.style.border = "4px solid transparent";
+    chunk.style.transition = "border-color 0.2s, transform 0.2s, z-index 0.2s";
 
     const videoEl = document.createElement("video");
     videoEl.srcObject = stream;
@@ -86,21 +92,32 @@ export function applyTiltTransform(
   gamma: number
 ) {
   const chunks = Array.from(container.children) as HTMLElement[];
+  const maxMove = 40; // Sensitivity for parallax shift
 
-  // INCREASED SENSITIVITY
-  const maxMove = 40;
-
-  // Constrain rotation to +/- 30 degrees for the effect calculation
   const yMove = (Math.max(-30, Math.min(30, beta)) / 30) * maxMove;
   const xMove = (Math.max(-30, Math.min(30, gamma)) / 30) * maxMove;
 
   chunks.forEach((chunk) => {
     const video = chunk.querySelector("video");
     if (video) {
-      // Move opposite to tilt for parallax feel
       video.style.transform = `translate(${xMove}px, ${yMove}px)`;
     }
   });
+}
+
+export function highlightChunk(chunk: HTMLElement) {
+  // Reset all borders and transforms
+  document.querySelectorAll(".video-chunk").forEach((el) => {
+    const element = el as HTMLElement;
+    element.style.borderColor = "transparent";
+    element.style.zIndex = "1";
+    element.style.transform = "scale(1)";
+  });
+
+  // Apply highlight to target
+  chunk.style.borderColor = "#00ff00"; // Bright Green
+  chunk.style.zIndex = "10";
+  chunk.style.transform = "scale(1.05)"; // Slight pop out
 }
 
 export function shuffleGrid(container: HTMLElement) {

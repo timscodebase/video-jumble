@@ -34,7 +34,7 @@ main {
 .video-container {
   margin: 1rem auto 0 auto;
   display: grid;
-  gap: clamp(0.25rem, 2vw, 1rem);
+  gap: 2px;
   grid-template-columns: repeat(4, 1fr);
 }
 
@@ -67,4 +67,36 @@ button {
 .video-container div video {
   transition: transform 0.1s ease-out;
   will-change: transform;
+}
+
+/* src/style.css */
+
+.calibration-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  pointer-events: none; /* Let clicks pass through to dots */
+}
+
+.calibration-dot {
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  cursor: pointer;
+  pointer-events: auto; /* Capture clicks */
+  transform: translate(-50%, -50%);
+  border: 2px solid white;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.calibration-dot:hover {
+  transform: translate(-50%, -50%) scale(1.5);
+}
+
+.calibration-dot.calibrated {
+  background-color: #00ff00; /* Turn green when clicked */
 }

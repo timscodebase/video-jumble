@@ -21,7 +21,11 @@
 			"vite": "npm:rolldown-vite@7.2.5"
 		},
 		"onlyBuiltDependencies": [
-			"@biomejs/biome"
+			"@biomejs/biome",
+			"core-js"
 		]
+	},
+	"dependencies": {
+		"webgazer": "^3.4.0"
 	}
 }
